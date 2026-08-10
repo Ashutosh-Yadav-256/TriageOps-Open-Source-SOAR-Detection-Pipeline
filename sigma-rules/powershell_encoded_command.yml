@@ -1,0 +1,50 @@
+title: PowerShell Encoded Command Execution
+id: 53c8fb73-7c2a-43cf-be6b-e523f66cb711
+status: stable
+description: Detects PowerShell execution with encoded command flags (-EncodedCommand, -enc, -e, -ec) alongside suspicious companion flags like WindowStyle Hidden or NoProfile.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1027/
+author: SOAR Detection Engineering
+date: 2024/08/10
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1027
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_cli_encoded:
+        CommandLine|contains:
+            - ' -EncodedCommand '
+            - ' -enc '
+            - ' -e '
+            - ' -ec '
+    selection_cli_suspicious:
+        CommandLine|contains:
+            - ' -WindowStyle Hidden'
+            - ' -NonInteractive'
+            - ' -NoProfile'
+            - ' -ExecutionPolicy Bypass'
+    filter_sccm:
+        ParentImage|contains:
+            - '\CCM\'
+            - 'SCCM'
+    condition: selection_img and selection_cli_encoded and selection_cli_suspicious and not filter_sccm
+fields:
+    - ComputerName
+    - User
+    - Image
+    - CommandLine
+    - ParentCommandLine
+    - ParentImage
+falsepositives:
+    - administrative automation
+    - SCCM/Intune
+level: high

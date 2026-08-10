@@ -1,0 +1,56 @@
+name: Sigma Validation Pipeline
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - 'sigma-rules/**'
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - 'sigma-rules/**'
+
+jobs:
+  yaml-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install yamllint
+        run: pip install yamllint
+      - name: Run yamllint
+        run: yamllint -c .yamllint.yml sigma-rules/
+
+  sigma-validate:
+    needs: yaml-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install sigma-cli
+        run: pip install sigma-cli
+      - name: Run sigma check
+        run: sigma check sigma-rules/
+
+  sigma-convert-splunk:
+    needs: sigma-validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install sigma-cli and pysigma-backend-splunk
+        run: pip install sigma-cli pysigma-backend-splunk
+      - name: Run sigma convert
+        run: sigma convert -t splunk sigma-rules/

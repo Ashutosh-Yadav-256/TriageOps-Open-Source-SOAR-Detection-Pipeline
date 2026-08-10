@@ -1,0 +1,46 @@
+title: PowerShell Download Cradle
+id: c695a4f3-7928-444a-8740-14e9f3333333
+status: stable
+description: Detects download cradle patterns in process creation events used for fetching and executing payloads.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1105/
+author: SOAR Detection Engineering
+date: 2024/08/10
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.command_and_control
+    - attack.t1105
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_download:
+        CommandLine|contains:
+            - 'Net.WebClient'
+            - 'DownloadString'
+            - 'DownloadFile'
+            - 'DownloadData'
+            - 'Invoke-WebRequest'
+            - 'IWR'
+            - 'Start-BitsTransfer'
+            - 'Net.HttpWebRequest'
+            - 'wget'
+            - 'curl'
+            - 'BitsTransfer'
+    selection_exec:
+        CommandLine|contains:
+            - 'Invoke-Expression'
+            - 'IEX'
+            - 'FromBase64String'
+    condition: selection_img and (selection_download or selection_exec)
+falsepositives:
+    - legitimate software installers
+    - system admin scripts
+    - chocolatey
+level: high

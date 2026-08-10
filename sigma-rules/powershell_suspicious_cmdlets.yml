@@ -1,0 +1,38 @@
+title: PowerShell Suspicious Cmdlets
+id: eeb826e7-1335-4330-8199-a8b273d4eebe
+status: test
+description: Detects suspicious and offensive PowerShell cmdlets being executed.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+author: SOAR Detection Engineering
+date: 2024/08/10
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_cmdlets:
+        CommandLine|contains:
+            - 'Invoke-Expression'
+            - 'IEX'
+            - 'Invoke-Mimikatz'
+            - 'Invoke-Command'
+            - 'Add-MpPreference -ExclusionPath'
+            - 'Set-MpPreference -DisableRealtimeMonitoring'
+            - 'Invoke-Shellcode'
+            - 'Invoke-DllInjection'
+            - 'Get-Keystrokes'
+            - 'Get-GPPPassword'
+            - 'Invoke-CredentialInjection'
+            - 'Invoke-TokenManipulation'
+    condition: selection_img and selection_cmdlets
+falsepositives:
+    - Legitimate remote management
+    - pen testing
+level: high

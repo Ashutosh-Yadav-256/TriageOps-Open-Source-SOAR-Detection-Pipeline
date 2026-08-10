@@ -1,0 +1,17 @@
+extends: default
+
+rules:
+  indentation:
+    spaces: 4
+    indent-sequences: true
+  line-length:
+    max: 200
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-comments: true
+  document-start: disable
+  truthy: disable
+  comments:
+    min-spaces-from-content: 1
+  key-duplicates: enable
+  empty-lines:
+    max: 2

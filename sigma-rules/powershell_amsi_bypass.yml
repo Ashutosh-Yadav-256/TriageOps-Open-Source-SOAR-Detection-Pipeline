@@ -1,0 +1,42 @@
+title: PowerShell AMSI Bypass
+id: a84c98a5-d8dc-4c81-80a5-f852e680a653
+status: stable
+description: Detects AMSI bypass attempts and memory patching mechanisms in process creation events.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1562/001/
+author: SOAR Detection Engineering
+date: 2024/08/10
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_amsi:
+        CommandLine|contains:
+            - 'AmsiUtils'
+            - 'amsiInitFailed'
+            - 'amsiContext'
+            - 'amsi.dll'
+            - 'AmsiScanBuffer'
+            - 'AmsiInitialize'
+            - 'SetValue'
+            - 'System.Management.Automation.AmsiUtils'
+    selection_memory:
+        CommandLine|contains:
+            - 'VirtualProtect'
+            - 'Marshal.Copy'
+            - 'NonPublic'
+            - 'Static'
+    condition: selection_img and (selection_amsi or selection_memory)
+falsepositives:
+    - Security research/pen testing
+level: critical
