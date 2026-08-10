@@ -1,4 +1,4 @@
-# 🛡️ SOAR — Security Orchestration, Automation & Response
+#  SOAR — Security Orchestration, Automation & Response
 
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -16,8 +16,8 @@ graph LR
     D --> E[Report Generator]
     E --> F[MD/JSON Reports]
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#bbf,stroke:#333,stroke-width:2px
+    style A fill:#a160a1,stroke:#333,stroke-width:2px
+    style F fill:#232378,stroke:#333,stroke-width:2px
 ```
 
 ```mermaid
@@ -27,8 +27,8 @@ graph LR
     C --> D[Sigma Validate]
     D --> E[Splunk Convert]
 
-    style A fill:#bfb,stroke:#333,stroke-width:2px
-    style E fill:#fbb,stroke:#333,stroke-width:2px
+    style A fill:#212e21,stroke:#333,stroke-width:2px
+    style E fill:#9c5a5a,stroke:#333,stroke-width:2px
 ```
 
 ##  Project Structure
@@ -70,7 +70,7 @@ SOAR/
    python tests/validate_sigma.py
    ```
 
-## 📋 Sigma Detection Rules
+##  Sigma Detection Rules
 
 | Rule File | Technique | Description | Severity |
 |-----------|-----------|-------------|----------|
@@ -124,6 +124,6 @@ Incident response reports are generated in Markdown and JSON formats. Example JS
 
 Contributions are welcome! Please ensure all new Sigma rules pass the local validation script (`python tests/validate_sigma.py`) before submitting a pull request.
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
